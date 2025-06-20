@@ -11,8 +11,8 @@ class Turbine(Equipment):
         m_out1 = m_in * self.y
         m_out2 = m_in * (1 - self.y)
 
-        self.properties_out[0].mass_flow_rate = m_out1  # hacia Heater Closed
-        self.properties_out[1].mass_flow_rate = m_out2  # hacia Condensador
+        self.properties_out[0].mass_flow_rate = m_out1  
+        self.properties_out[1].mass_flow_rate = m_out2  
 
         h_in = self.properties_in[0].H
         h_out1 = self.properties_out[0].H
