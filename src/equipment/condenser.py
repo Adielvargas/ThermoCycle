@@ -1,6 +1,5 @@
 from .equipment import Equipment
 
-
 class Condenser(Equipment):
     def __init__(self, name):
         super().__init__(name)

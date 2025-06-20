@@ -2,36 +2,36 @@ from .equipment.turbine import Turbine
 from .equipment.heater import Heater
 from .equipment.condenser import Condenser
 from .equipment.pump import Pump
+from .equipment.heater_closed import HeaterClosed
+from .equipment.mixer import Mixer
 
 import networkx as nx
 import matplotlib.pyplot as plt
 
 
-class ThermoCycle():
+class ThermoCycle:
     def __init__(self):
 
         self.equipments = []
         self.connectors = []
         self.efficiency = None
 
-
     def add_equipment(self, equipment):
         self.equipments.append(equipment)
 
     def initialize(self):
-
         for equipment in self.equipments:
             for connector in equipment.connectors_in:
                 connector.add_equipment_out(equipment)
                 if connector not in self.connectors:
                     self.connectors.append(connector)
                 equipment.properties_in.append(connector.property_out)
+
             for connector in equipment.connectors_out:
                 connector.add_equipment_in(equipment)
                 if connector not in self.connectors:
                     self.connectors.append(connector)
                 equipment.properties_out.append(connector.property_in)
-
 
     def calculate(self):
         for connector in self.connectors:
@@ -44,17 +44,17 @@ class ThermoCycle():
             equipment.calculate()
 
     def calculate_efficiency(self):
-        W_liq = 0.0
+        W_net = 0.0
         Q_in = 0.0
         for equipment in self.equipments:
             if isinstance(equipment, Turbine):
-                W_liq += equipment.work
+                W_net += equipment.work
             elif isinstance(equipment, Pump):
-                W_liq += equipment.work
+                W_net += equipment.work
             elif isinstance(equipment, Heater):
                 Q_in += equipment.heat
 
-        self.efficiency = W_liq / Q_in
+        self.efficiency = W_net / Q_in
 
     def draw(self, output_file):
         G = nx.DiGraph()
@@ -72,5 +72,3 @@ class ThermoCycle():
 
         plt.savefig(output_file, dpi=300)
         plt.close()
-
-
